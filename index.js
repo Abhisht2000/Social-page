@@ -2,7 +2,7 @@ const express=require("express");
 const app=express();
 const port = 3000;
 const path = require("path");
-// import { v4 as uuidv4 } from 'uuid';
+const{ v4:uuidv4 }=require('uuid');
 
 
 app.use(express.urlencoded({extended: true}));
@@ -12,17 +12,17 @@ app.set("views",path.join(__dirname,"views"));
 app.use(express.static(path.join(__dirname,"public")));
 
 let posts=[{
-    id: "1a",
+    id: uuidv4(),
     username:"Raj Singh",
     content:"I was fucked up",
 },
 {
-    id: "2b",
+    id: uuidv4(),
     username:"Mukesh Chauhan",
     content:"Today i give birth two babies",
 },
 {   
-    id: "3c",
+    id: uuidv4(),
     username:"Abhishek Singh",
     content:"Yeah, I am i witness of Mukesh's babies",
 }
@@ -37,13 +37,29 @@ app.get("/posts/:id",(req,res)=>{
     let {id}=req.params;
     let post=posts.find((p)=> id==p.id);
     res.render("show.ejs",{post});
-})
-// app.get("/posts/new",(req,res)=>{
-//     res.render("new.ejs");
-// });
+});
+
+
+app.patch("/posts/:id",(req,res)=>{
+let { id }=req.params;
+let newContent=req.body.content;
+let post=posts.find((p)=>id === p.id);    
+post.content=newContent;
+console.log(post);
+res.send("patch request working"); 
+});
+
+
+// app.get("posts/:id/edit",(req,res)=>{
+//     let {id}=req.params;
+//     let post =posts.find((p)=>  id === p.id);
+//     res.render("edit.ejs");
+// })
 app.post("/posts",(req,res)=>{
     let { username, content} =req.body;
-    posts.push({ username, content});
+    let id= uuidv4();
+    console.log(id);
+    posts.push({ id, username, content});
     res.redirect("/posts")
 });
 
