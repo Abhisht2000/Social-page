@@ -3,9 +3,13 @@ const app=express();
 const port = 3000;
 const path = require("path");
 const{ v4:uuidv4 }=require('uuid');
+const methodOverride =require("method-override"); 
 
 
 app.use(express.urlencoded({extended: true}));
+app.use(express.json()); // 
+app.use(methodOverride("_method"));
+
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -18,7 +22,7 @@ let posts=[{
 },
 {
     id: uuidv4(),
-    username:"Mukesh Chauhan",
+    username:"Mukesh Chauhan", 
     content:"Today i give birth two babies",
 },
 {   
@@ -38,23 +42,6 @@ app.get("/posts/:id",(req,res)=>{
     let post=posts.find((p)=> id==p.id);
     res.render("show.ejs",{post});
 });
-
-
-app.patch("/posts/:id",(req,res)=>{
-let { id }=req.params;
-let newContent=req.body.content;
-let post=posts.find((p)=>id === p.id);    
-post.content=newContent;
-console.log(post);
-res.send("patch request working"); 
-});
-
-
-// app.get("posts/:id/edit",(req,res)=>{
-//     let {id}=req.params;
-//     let post =posts.find((p)=>  id === p.id);
-//     res.render("edit.ejs");
-// })
 app.post("/posts",(req,res)=>{
     let { username, content} =req.body;
     let id= uuidv4();
@@ -62,6 +49,29 @@ app.post("/posts",(req,res)=>{
     posts.push({ id, username, content});
     res.redirect("/posts")
 });
+
+app.patch("/posts/:id",(req,res)=>{
+let { id }=req.params;
+let newContent=req.body.content;
+let post=posts.find((p)=>id === p.id);    
+post.content=newContent;
+console.log(post);
+res.redirect(`/posts`);
+});
+
+
+app.get("/posts/:id/edit",(req,res)=>{
+    let {id}=req.params;
+    let post =posts.find((p)=> id === p.id);
+    res.render("edit.ejs", {post});
+})
+app.delete("/posts/:id",(req,res)=>{
+    let { id } = req.params;
+    posts=posts.filter((p)=> id !== p.id);
+    //res.send("delete Sucess");
+    res.redirect("/posts");
+})
+
 
 app.listen(port,()=>{
     console.log(`server is listening on port 3000`);

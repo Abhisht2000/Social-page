@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit your post</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <h2>Edit Your Post</h2>
-    <p>Post id: </p>
-    <p>Post username :</p>
-    <form action="">
-        <textarea name="" id="">
-        </textarea>
-            <button>Submit</button>
-        
+    <p>Post id: <%= post.id %> </p>
+    <p>Post username : <%= post.username %></p>
+    <!-- FIXED #6/#7: Form action, method, name="content", prefill content. Uses _method for POST-as-PATCH. Original empty/broken. -->
+    <form action="/posts/<%= post.id %>?_method=PATCH" method="POST">
+        <input type="hidden" name="_method" value="PATCH">
+        <textarea name="content" placeholder="Edit content"><%= post.content %></textarea>
+        <br>
+        <button type="submit">Save Changes</button>
     </form>
+    <a href="/posts">Cancel</a>
     
 </body>
 </html>

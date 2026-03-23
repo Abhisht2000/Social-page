@@ -8,14 +8,16 @@
 </head>
 <body>
     <h1>Quora Posts</h1>
-        <a href="http://localhost:3000/posts/new"> create new post</a>  
+        <a href="/posts/new"> create new post</a>  
     <% for (let post of posts){ %>
         <div class="post">
-        <h2 class="user">@<%=post.username  %></h2>
-        <h3 class="content"><%= post.content  %>!</h3> 
-        <a href="http://localhost:3000/posts/<%=post.id %>"> See in detail</a>  
-        <a href="http://localhost:3000/posts/<%=post.id %>/edit"> edit</a>  
-        
+        <h2 class="user">@<%= post.username %></h2>
+        <h3 class="content"><%= post.content %></h3> 
+        <a href="/posts/<%=post.id %>"> See in detail</a>  
+        <a href="/posts/<%=post.id %>/edit"> edit</a> 
+        <form method="post" action="/posts/<%=post.id%>?_method=DELETE">
+        <button >Delete Post</button>
+        </form> 
         </div>
         <% } %>
 
